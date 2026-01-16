@@ -127,7 +127,8 @@ optional arguments:
 | Bi-implication | `<->` | `a <-> b` | a and b have the same truth value |
 
 
-#### Example 
+
+#### Example 1: Complex Formula with Custom Ordering
 
 ```bash
 python BDD.py "(a & !c) | (b ^ d)" --ordering "a,b,c,d"
@@ -139,6 +140,51 @@ Formula String: (a & !c) | (b ^ d)
 Parsed PySMT: Or(And(a, Not(c)), Xor(b, d))
 Variable Ordering (user-defined): ['a', 'b', 'c', 'd']
 ROBDD Root ID: 12
+ROBDD Image saved locally to: robdd_output.png
+```
+
+#### Example 2: Bit Comparison Logic (Sequential Comparison)
+
+```bash
+python BDD.py "(x3 & !y3) | ((x3 <-> y3) & (x2 & !y2)) | ((x3 <-> y3) & (x2 <-> y2) & (x1 & !y1))" --ordering "y3,x3,y2,x2,y1,x1"
+```
+
+**Output:**
+```
+Formula String: (x3 & !y3) | ((x3 <-> y3) & (x2 & !y2)) | ((x3 <-> y3) & (x2 <-> y2) & (x1 & !y1))
+Parsed PySMT: Or(And(x3, Not(y3)), And(Iff(x3, y3), And(x2, Not(y2))), And(Iff(x3, y3), Iff(x2, y2), And(x1, Not(y1))))
+Variable Ordering (user-defined): ['y3', 'x3', 'y2', 'x2', 'y1', 'x1']
+ROBDD Root ID: 18
+ROBDD Image saved locally to: robdd_output.png
+```
+
+#### Example 3: Majority Function (5 Variables)
+
+```bash
+python BDD.py "(x1 & x2 & x3) | (x1 & x2 & x4) | (x1 & x2 & x5) | (x1 & x3 & x4) | (x1 & x3 & x5) | (x1 & x4 & x5) | (x2 & x3 & x4) | (x2 & x3 & x5) | (x2 & x4 & x5) | (x3 & x4 & x5)" --ordering "x1,x2,x3,x4,x5"
+```
+
+**Output:**
+```
+Formula String: (x1 & x2 & x3) | (x1 & x2 & x4) | (x1 & x2 & x5) | (x1 & x3 & x4) | (x1 & x3 & x5) | (x1 & x4 & x5) | (x2 & x3 & x4) | (x2 & x3 & x5) | (x2 & x4 & x5) | (x3 & x4 & x5)
+Parsed PySMT: Or of 10 AND terms
+Variable Ordering (user-defined): ['x1', 'x2', 'x3', 'x4', 'x5']
+ROBDD Root ID: 22
+ROBDD Image saved locally to: robdd_output.png
+```
+
+#### Example 4: Redundancy and Simplification
+
+```bash
+python BDD.py "(a & b) | (a & b & (c ^ d ^ e))" --ordering "a,b,c,d,e"
+```
+
+**Output:**
+```
+Formula String: (a & b) | (a & b & (c ^ d ^ e))
+Parsed PySMT: Or(And(a, b), And(a, b, Xor(c, d, e)))
+Variable Ordering (user-defined): ['c', 'd', 'e', 'a', 'b']
+ROBDD Root ID: 8
 ROBDD Image saved locally to: robdd_output.png
 ```
 ---
